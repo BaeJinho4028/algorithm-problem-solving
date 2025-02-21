@@ -1,19 +1,18 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 int solution(vector<vector<string>> clothes) {
-    int answer = 1;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
     
     map<string, int> ma;
-    
-    for(auto a : clothes){
-        ma[a[1]]++;
+    for(auto c : clothes) {
+        ma[c[1]]++;
     }
     
-    for(auto b : ma){
-        answer *= (b.second+1);
+    int answer = 1;
+    for(auto c : ma) {
+        answer *= (c.second + 1);
     }
-    
     return answer - 1;
 }
