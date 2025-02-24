@@ -1,27 +1,17 @@
-#include <vector>
-#include <iostream>
-#include <queue>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-vector<int> solution(vector<int> arr) 
-{
-    vector<int> answer;
-
-    queue<int> q;
+vector<int> solution(vector<int> arr) {
+    ios::sync_with_stdio(0); cin.tie(0);
     
-    for(auto a : arr){
-        if(q.empty()){
-            q.push(a);
+    vector<int> answer;
+    int pre;
+    for (int n : arr) {
+        if (pre != n) {
+            answer.emplace_back(n);
         }
-        else{
-            if(q.front() == a) continue;
-            answer.push_back(q.front());
-            q.pop();
-            q.push(a);
-        }
+        pre = n;
     }
-    answer.push_back(q.front());
-
+    
     return answer;
 }
