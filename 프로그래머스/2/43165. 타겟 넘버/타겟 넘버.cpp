@@ -1,30 +1,16 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, k;
-int cnt;
-int v[25];
-
-void f(int cur, int num){
-    if(cur == n){
-        if(num == k) cnt++;
-        return;
+int dfs(const vector<int>& numbers, int target, int idx, int sum) {
+    if (idx == numbers.size()) {
+        return (sum == target);
     }
     
-    f(cur+1, num + v[cur]);
-    f(cur+1, num - v[cur]);
+    int add = dfs(numbers, target, idx + 1, sum + numbers[idx]);
+    int sub = dfs(numbers, target, idx + 1, sum - numbers[idx]);
+    return add + sub;
 }
 
 int solution(vector<int> numbers, int target) {
-    n = numbers.size();
-    k = target;
-    
-    for(int i=0; i<n; i++)
-        v[i] = numbers[i];
-    
-    f(0, 0);
-    
-    int answer = cnt;
-    
-    return answer;
+    return dfs(numbers, target, 0, 0);
 }
