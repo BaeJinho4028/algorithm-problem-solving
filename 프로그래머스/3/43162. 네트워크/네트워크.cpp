@@ -1,6 +1,32 @@
 #include <bits/stdc++.h>
-
 using namespace std;
+
+void dfs(int idx, int n, const vector<vector<int>>& computers, vector<bool>& visited) {
+    visited[idx] = true;
+    for (int i = 0; i < n; ++i) {
+        if (computers[idx][i] && !visited[i]) {
+            dfs(i, n, computers, visited);
+        }
+    }
+}
+
+int solution(int n, vector<vector<int>> computers) {
+    ios::sync_with_stdio(0); cin.tie(0);
+    
+    vector<bool> visited(n, false);
+    int answer = 0;
+    
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i]) {
+            dfs(i, n, computers, visited);
+            answer++;
+        }
+    }
+    return answer;
+}
+
+/*
+
 
 vector<int> adj[205];
 bool vis[205];
@@ -31,3 +57,4 @@ int solution(int n, vector<vector<int>> computers) {
     int answer = cnt;
     return answer;
 }
+*/
