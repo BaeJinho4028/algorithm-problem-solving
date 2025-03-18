@@ -1,38 +1,27 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-int solution(int n, int number) {
-    int answer = -1;
-    
-    
-    set<int> se[8];
-    
-    int sum =0;
-    for(int i = 0; i < 8; i++){
-        sum = 10 * sum + n;
-        se[i].insert(sum);
+int ans = INT_MAX;
+
+void dfs(int n, int number, int cnt, int cur) {
+    if (cnt > 8) return;
+    if (cur == number) {
+        ans = min(ans, cnt);
+        return;
     }
     
-    for(int i=1; i<8; i++){
-        for(int j=0; j<i; j++){
-            for(auto x : se[j]){
-                for(auto y : se[i-j-1]){
-                    se[i].insert(x+y);
-                    se[i].insert(x-y);
-                    se[i].insert(x*y);
-                    if(y) se[i].insert(x/y);
-                }
-            }
-        }
+    int tmp = 0;
+    for (int i = 0; i < 8 - cnt; ++i) {
+        tmp = tmp * 10 + n;
+        
+        dfs(n, number, cnt + i + 1, cur + tmp);
+        dfs(n, number, cnt + i + 1, cur - tmp);
+        dfs(n, number, cnt + i + 1, cur * tmp);
+        if (tmp) dfs(n, number, cnt + i + 1, cur / tmp);
     }
-    
-    for(int i=0; i<8; i++){
-        if(se[i].find(number) != se[i].end()){
-            answer = i+1;
-            break;
-        }
-    }
-    
-    return answer;
+}
+
+int solution(int N, int number) {    
+    dfs(N, number, 0, 0);
+    return ans == INT_MAX ? -1 : ans;
 }
