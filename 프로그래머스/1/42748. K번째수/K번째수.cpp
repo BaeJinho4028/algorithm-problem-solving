@@ -1,20 +1,17 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 vector<int> solution(vector<int> array, vector<vector<int>> commands) {
     vector<int> answer;
     
-    for(int i=0; i<commands.size(); i++){
-        vector<int> tmp;
+    for (const auto& cmd : commands) {
+        int st = cmd[0] - 1;
+        int en = cmd[1] - 1;
+        int k = cmd[2] - 1;
+        vector<int> arr(array.begin() + st, array.begin() + en + 1);
+        sort(arr.begin(), arr.end());
         
-        for(int j=commands[i][0]-1; j<commands[i][1]; j++){
-            tmp.push_back(array[j]);
-        }
-        sort(tmp.begin(), tmp.end());
-        
-        answer.push_back(tmp[commands[i][2]-1]);
+        answer.push_back(arr[k]);
     }
-    
     return answer;
 }
