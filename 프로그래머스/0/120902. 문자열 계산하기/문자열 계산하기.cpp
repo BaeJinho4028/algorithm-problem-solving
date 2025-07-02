@@ -5,12 +5,12 @@
 using namespace std;
 
 int solution(string my_string) {
-    istringstream iss(my_string);
+    stringstream ss(my_string);
     int x, y;
     char op;
     
-    iss >> x;
-    while (iss >> op >> y) {
+    ss >> x;
+    while (ss >> op >> y) {
         if (op == '+') x += y;
         else if (op == '-') x -= y;
     }
