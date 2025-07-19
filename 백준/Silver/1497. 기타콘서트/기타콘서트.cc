@@ -1,48 +1,51 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m;
-long long state[10];
 
-int bit_cnt(long long x) {
-    int ret = 0;
-    for (int i = 0; i < max(n, m); ++i) {
-        ret += (x >> i) & 1;
-    }
-    return ret;
-}
- 
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
+    int n, m;
     cin >> n >> m;
 
+    vector<long long> state(n, 0);
+    long long possible = 0;
+
     for (int i = 0; i < n; ++i) {
-        string a, b;
-        cin >> a >> b;
-        for (int j = m - 1; j >= 0; --j) {
-            state[i] = (state[i] << 1) | (b[j] == 'Y');
+        string _, s;
+        cin >> _ >> s;
+        
+        for (int j = 0; j < m; ++j) {
+            if (s[j] == 'Y') {
+                state[i] |= (1LL << j);
+                possible |= (1LL << j);
+            }
         }
     }
 
-    pair<int, int> ans = {0, -1};
-    for (int i = 0; i < (1 << n); ++i) {
-        long long comb = 0;
+    if (possible == 0) {
+        cout << -1;
+        return 0;
+    }
+
+    int mn = '????';
+    for (int i = 1; i <= (1 << n); ++i) {
+        int cnt = 0;
+        long long chk = 0;
+
         for (int j = 0; j < n; ++j) {
-            if ((i & (1LL << j)) == 0) continue;
-            comb |= state[j];
+            if (i & (1 << j)) {
+                cnt++;
+                chk |= state[j];
+            }
         }
 
-        int song = bit_cnt(comb);
-        int guitar = bit_cnt(i);
-
-        if (ans.first < song) {
-            ans = {song, guitar};
-        }
-        else if (ans.first == song && ans.second > guitar) {
-            ans = {song, guitar};
+        if (chk == possible) {
+            mn = min(mn, cnt);
         }
     }
-    cout << ans.second;
+
+    cout << mn;
 }
