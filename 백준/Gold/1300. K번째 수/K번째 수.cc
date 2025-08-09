@@ -21,9 +21,9 @@ int main() {
 
 	ll st = 0, en = n * n;
 
-	while (st <= en) {
+	while (st < en) {
 		ll mid = (st + en) / 2;
-		if (solve(mid)) en = mid - 1;
+		if (solve(mid)) en = mid;
 		else st = mid + 1;
 	}
 
