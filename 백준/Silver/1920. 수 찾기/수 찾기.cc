@@ -18,6 +18,14 @@ int main() {
     while (m--) {
         int x;
         cin >> x;
-        cout << binary_search(v.begin(), v.end(), x) << '\n';
+
+        int st = 0;
+        int en = n;
+        while (st < en) {
+            int mid = (st + en) / 2;
+            if (x > v[mid]) st = mid + 1;
+            else en = mid;
+        }
+        cout << (st < n && v[st] == x) << '\n';
     }
 }
