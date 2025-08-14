@@ -1,51 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m;
-vector<int> A, B;
-vector<int> C;
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-void bs(int t) {
-	int st = 0;
-	int en = B.size() - 1;
-	while (st <= en) {
-		int mid = (st + en) / 2;
-		if (t > B[mid])
-			st = mid + 1;
-		else if (t < B[mid])
-			en = mid - 1;
-		else return;
-	}
-	
-	C.push_back(t);
-	return;
-}
+    int n, m;
+    cin >> n >> m;
 
-int main(void) {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    vector<int> a(n), b(m);
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+    }
+    for (int i = 0; i < m; ++i) {
+        cin >> b[i];
+    }
+    sort(b.begin(), b.end());
 
-	cin >> n >> m;
+    vector<int> ans;
+    for (int x : a) {
+        if (!binary_search(b.begin(), b.end(), x)) {
+            ans.push_back(x);
+        }
+    }
 
-	int num;
-	for (int i = 0; i < n; i++) {
-		cin >> num;
-		A.push_back(num);
-	}
-	for (int i = 0; i < m; i++) {
-		cin >> num;
-		B.push_back(num);
-	}
-	sort(A.begin(), A.end());
-	sort(B.begin(), B.end());
+    sort(ans.begin(), ans.end());
 
-
-	for(int i=0; i<A.size(); i++){
-		bs(A[i]);
-	}
-
-	cout << C.size() << '\n';
-	for (int i = 0; i < C.size(); i++) {
-		cout << C[i] << ' ';
-	}
+    cout << ans.size() << '\n';
+    for (int x : ans) {
+        cout << x << ' ';
+    }
 }
