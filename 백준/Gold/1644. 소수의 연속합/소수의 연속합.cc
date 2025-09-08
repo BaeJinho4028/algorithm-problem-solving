@@ -1,30 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MX = 4000002;
-vector<bool> pn(MX, true);
-vector<int> primes;
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-int main(void) {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    int n;
+    cin >> n;
 
-	for (int i = 2; i*i < MX; i++) {
-		if (!pn[i]) continue;
-		for (int j = i * i; j < MX; j += i)
-			pn[j] = false;
-	}
-	for (int i = 2; i < MX; i++) if (pn[i]) primes.push_back(i);
-	primes.push_back(0);
+    vector<bool> p(n + 1, true);
+    p[0] = p[1] = false;
+    for (int i = 2; i * i <= n; ++i) {
+        if (!p[i]) continue;
+        for (int j = i * i; j <= n; j += i) {
+            p[j] = false;
+        }
+    }
 
-	int target, st = 0, en = 1, ans = 0, tmp = primes[0];
-	cin >> target;
+    vector<int> primes;
+    for (int i = 2; i <= n; ++i) {
+        if (p[i]) primes.push_back(i);
+    }
 
-	while (1) {
-		if (tmp == target) ans++;
-		if (tmp <= target) tmp += primes[en++];
-		if (tmp > target) tmp -= primes[st++];
-		if (en == int(primes.size())) break;
-	}
-	cout << ans;
+    int st = 0, en = 0, sum = 0, ans = 0;
+    while (true) {
+        if (sum == n) ans++;
+
+        if (sum >= n) sum -= primes[st++];
+        else {
+            if (en == primes.size()) break;
+            sum += primes[en++];
+        }
+    }
+
+    cout << ans;
 }
