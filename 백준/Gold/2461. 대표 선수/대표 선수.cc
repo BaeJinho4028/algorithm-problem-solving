@@ -1,43 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int a[1005][1005];
-
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	int n, m;
-	cin >> n >> m;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-	vector<int> idx;
+    int n, m;
+    cin >> n >> m;
 
-	for (int i = 0; i < n; i++) {
-		idx.push_back(0);
-		for (int j = 0; j < m; j++) {
-			cin >> a[i][j];
-		}
-	}
+    vector<vector<int>> v(n, vector<int>(m));
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            cin >> v[i][j];
+        }
+        sort(v[i].begin(), v[i].end());
+    }
 
-	for (int i = 0; i < n; i++)
-		sort(a[i], a[i]+m);
+    priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
 
-	int ans = '????';
-	while (1) {
-		int mx = -1, mn = '????';
-		int mn_i = 0;
+    int mx = 0;
+    for (int i = 0; i < n; ++i) {
+        mx = max(mx, v[i][0]);
+        pq.push({v[i][0], i, 0});
+    }
 
-		for (int i = 0; i < n; i++) {
-			if (mn > a[i][idx[i]]) {
-				mn = a[i][idx[i]];
-				mn_i = i;
-			}
-			mx = max(mx, a[i][idx[i]]);
-		}
+    int ans = '????';
+    while (true) {
+        auto [w, r, c] = pq.top(); pq.pop();
+        ans = min(ans, mx - w);
 
-		ans = min(ans, mx - mn);
-		idx[mn_i]++;
-		if (idx[mn_i] == m) break;
-;	}
+        if (c == m - 1) break;
 
-	cout << ans;
+        mx = max(mx, v[r][c + 1]);
+        pq.push({v[r][c + 1], r, c + 1});
+    }
+    cout << ans;
 }
