@@ -8,31 +8,31 @@ int main() {
     int n, m;
     cin >> n >> m;
 
-    vector<vector<int>> v(n, vector<int>(m));
+    vector<pair<int, int>> v;
+
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < m; ++j) {
-            cin >> v[i][j];
+            int x;
+            cin >> x;
+            v.push_back({x, i});
         }
-        sort(v[i].begin(), v[i].end());
     }
-
-    priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
-
-    int mx = 0;
-    for (int i = 0; i < n; ++i) {
-        mx = max(mx, v[i][0]);
-        pq.push({v[i][0], i, 0});
-    }
+    sort(v.begin(), v.end());
 
     int ans = '????';
-    while (true) {
-        auto [w, r, c] = pq.top(); pq.pop();
-        ans = min(ans, mx - w);
 
-        if (c == m - 1) break;
+    int st = 0, en = 0;
+    int cnt = 0;
+    vector<int> chk(n + 1);
+    while (st < n * m) {
+        while (cnt < n && en < n * m) {
+            if (chk[v[en++].second]++ == 0) cnt++;
+        }
+        if (cnt != n) break;
 
-        mx = max(mx, v[r][c + 1]);
-        pq.push({v[r][c + 1], r, c + 1});
+        ans = min(ans, v[en - 1].first - v[st].first);
+        if (--chk[v[st++].second] == 0) cnt--;
     }
+
     cout << ans;
 }
