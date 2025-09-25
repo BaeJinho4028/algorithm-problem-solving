@@ -1,57 +1,51 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, k;
-int t[1005], d[1005], ans[1005];
-vector<int> adj[100005];
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-int main() { 
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, k;
+        cin >> n >> k;
 
-	int tc;
-	cin >> tc;
+        vector<int> b(n + 1);
+        for (int i = 1; i <= n; ++i) {
+            cin >> b[i];
+        }
 
-	while (tc--) {
-		cin >> n >> k;
+        vector<int> adj[n + 1];
+        vector<int> deg(n + 1);
+        for (int i = 0; i < k; ++i) {
+            int a, b;
+            cin >> a >> b;
+            adj[a].push_back(b);
+            deg[b]++;
+        }
 
-		memset(t, 0, sizeof(t));
-		memset(d, 0, sizeof(d));
-		memset(ans, 0, sizeof(ans));
-		for (int i = 0; i < 1001; i++) adj[i].clear();
+        queue<int> q;
+        vector<int> d(n + 1);
+        for (int i = 1; i <= n; ++i) {
+            if (deg[i] == 0) {
+                d[i] = b[i];
+                q.push(i);
+            }
+        }
 
-		for (int i = 1; i <= n; i++)
-			cin >> t[i];
-
-		while (k--) {
-			int u, v;
-			cin >> u >> v;
-
-			adj[u].push_back(v);
-			d[v]++;
-		}
-
-		int w;
-		cin >> w;
-
-		queue<int> q;
-
-		for (int i = 1; i <= n; i++) {
-			if (d[i] == 0) {
-				q.push(i);
-				ans[i] = t[i];
-			}
-		}
-
-		while (!q.empty()) {
-			int cur = q.front(); q.pop();
-			for (auto nxt : adj[cur]) {
-				ans[nxt] = max(ans[nxt], ans[cur] + t[nxt]);
-				d[nxt]--;
-				if (d[nxt] == 0) q.push(nxt);
-			}
-		}
-
-		cout << ans[w] << '\n';
-	}
+        while (!q.empty()) {
+            int cur = q.front(); q.pop();
+            for (int nxt : adj[cur]) {
+                d[nxt] = max(d[nxt], d[cur] + b[nxt]);
+                if (--deg[nxt] == 0) {
+                    q.push(nxt);
+                }
+            }
+        }
+        
+        int w;
+        cin >> w;
+        cout << d[w] << '\n';
+    }
 }
