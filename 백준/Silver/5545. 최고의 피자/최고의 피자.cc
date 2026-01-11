@@ -1,30 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
 
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-	int n; cin >> n;
-	int a, b, c; cin >> a >> b >> c; //도우가격, 토핑가격, 도우열량
+    int n;
+    cin >> n;
+    
+    int a, b;
+    cin >> a >> b;
 
-	vector<int> v;
-	for (int i = 0; i < n; i++) {
-		int x; cin >> x;
-		v.push_back(x);
-	}
+    int x;
+    cin >> x;
 
-	sort(v.begin(), v.end(), greater<>());
+    vector<int> v(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> v[i];
+    }
+    sort(v.begin(), v.end(), greater<>());
 
-	int mx = c / a;
+    int mx = x / a;
 
-	for (int i = 0; i < n; i++) {
-		a += b;
-		c += v[i];
-		
-		mx = max(mx, c / a);
-	}
+    for (int i = 0; i < n; ++i) {
+        a += b;
+        x += v[i];
 
-	cout << mx;
+        mx = max(mx, x / a);
+    }
+
+    cout << mx;
 }
