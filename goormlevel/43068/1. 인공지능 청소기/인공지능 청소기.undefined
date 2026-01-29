@@ -1,0 +1,30 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		Integer t = Integer.parseInt(br.readLine().trim());
+
+		while (t-- > 0) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int x = Math.abs(Integer.parseInt(st.nextToken()));
+			int y = Math.abs(Integer.parseInt(st.nextToken()));
+			int n = Integer.parseInt(st.nextToken());
+
+			if (x + y > n) {
+				sb.append("NO\n");
+				continue;
+			}
+
+			if ((x + y) % 2 != n % 2) {
+				sb.append("NO\n");
+				continue;
+			}
+
+			sb.append("YES\n");
+		}
+		System.out.println(sb.toString());
+	}
+}
