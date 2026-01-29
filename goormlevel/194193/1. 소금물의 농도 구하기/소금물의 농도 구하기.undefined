@@ -1,0 +1,15 @@
+import java.io.*;
+import java.util.*;
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+
+		double s = n * 7.0;
+		double result = s / (n + m);
+		result = Math.floor(result * 100) / 100;
+		System.out.printf("%.2f", result);
+	}
+}
