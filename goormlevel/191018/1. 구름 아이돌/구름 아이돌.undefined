@@ -1,0 +1,31 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+	static class Application {
+		int s;
+		int idx;
+
+		Application(int s, int idx) {
+			this.s = s;
+			this.idx = idx;
+		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		Integer n = Integer.parseInt(br.readLine().trim());
+		
+		String[] input = br.readLine().split(" ");
+		ArrayList<Application> arr = new ArrayList<>();
+		
+		for (int i = 0; i < n; ++i) {
+			arr.add(new Application(Integer.parseInt(input[i]), i + 1));
+		}
+
+		Collections.sort(arr, (a, b) -> b.s - a.s);
+
+		System.out.println(arr.get(0).idx + " " + arr.get(1).idx + " " + arr.get(2).idx);
+		
+	}
+}
