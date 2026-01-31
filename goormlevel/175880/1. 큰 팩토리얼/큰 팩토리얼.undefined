@@ -1,0 +1,13 @@
+import java.io.*;
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		Integer n = Integer.parseInt(br.readLine().trim());
+		long ans = 1;
+		for (int i = 2; i <= n; ++i) {
+			ans *= i;
+			ans %= 1_000_000_007L;
+		}
+		System.out.println(ans);
+	}
+}
