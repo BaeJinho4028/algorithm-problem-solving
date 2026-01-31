@@ -1,0 +1,13 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer stn = new StringTokenizer(br.readLine());
+		double a = Double.parseDouble(stn.nextToken());
+		double b = Double.parseDouble(stn.nextToken());
+
+		System.out.printf("%.6f", a + b);
+	}
+}
