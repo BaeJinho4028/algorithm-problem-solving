@@ -1,0 +1,62 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+	static class Block {
+		int x, y, score;
+
+		Block(int x, int y, int score) {
+			this.x = x;
+			this.y = y;
+			this.score = score;
+		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		String d = br.readLine();
+
+		Stack<Block> st = new Stack<>();
+		HashSet<String> se = new HashSet<>();
+
+		int x = 0, y = 0;
+		st.push(new Block(0, 0, 1));
+		se.add(0 + "," + 0);
+		
+		StringTokenizer stn = new StringTokenizer(br.readLine());
+		for (int i = 0; i < n; ++i) {
+			int score = Integer.parseInt(stn.nextToken());
+			char dir = d.charAt(i);
+
+			if (dir == 'R') {
+				y++;
+			}
+			else if (dir == 'L') {
+				y--;
+			}
+			else if (dir == 'U') {
+				x++;
+			}
+			else {
+				x--;
+			}
+
+			while (se.contains(x + "," + y)) {
+				Block cur = st.peek();
+				st.pop();
+				se.remove(cur.x + "," + cur.y);
+			}
+
+			st.push(new Block(x, y, score));
+			se.add(x + "," + y);
+		}
+
+		int sum = 0;
+		while (!st.isEmpty()) {
+			sum += st.peek().score;
+			st.pop();
+		}
+		System.out.println(sum);
+	}
+}
