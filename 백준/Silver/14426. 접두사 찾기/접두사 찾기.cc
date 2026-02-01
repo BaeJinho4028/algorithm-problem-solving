@@ -2,69 +2,43 @@
 using namespace std;
 
 const int ROOT = 1;
-int idx = 2;
-const int MX = 10000 * 500 + 5;
+int unused = 2;
+const int MX = 500 * 10000 + 5;
+int tr[MX][26];
 bool en[MX];
-int child[MX][26];
 
 void insert(string& s) {
     int cur = ROOT;
-    for (auto c : s) {
-        int& nxt = child[cur][c - 'a'];
+    for (char c : s) {
+        int& nxt = tr[cur][c - 'a'];
         if (nxt == -1) {
-            nxt = idx++;
+            nxt = unused++;
         }
         cur = nxt;
     }
     en[cur] = true;
 }
 
-bool count(string&s) {
-    int cur = ROOT;
-    for (auto c : s) {
-        int& nxt = child[cur][c - 'a'];
-        if (nxt == -1) {
-            return 0;
-        }
-        cur = nxt;
-    }
-    return 1;
-}
-
 bool find(string& s) {
     int cur = ROOT;
-    for (auto c : s) {
-        int& nxt = child[cur][c - 'a'];
+    for (char c : s) {
+        int& nxt = tr[cur][c - 'a'];
         if (nxt == -1) {
             return false;
         }
         cur = nxt;
     }
-    return en[cur];
-}
-
-void erase(string& s) {
-    int cur = ROOT;
-    for (auto c : s) {
-        int& nxt = child[cur][c - 'a'];
-        if (nxt == -1) {
-            return;
-        }
-        cur = nxt;
-    }
-    en[cur] = false;
+    return true;
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    memset(tr, -1, sizeof(tr));
 
     int n, m;
     cin >> n >> m;
-    
-    for (int i = 0; i < MX; ++i) {
-        fill(child[i], child[i] + 26, -1);
-    }
 
     while (n--) {
         string s;
@@ -72,13 +46,12 @@ int main() {
         insert(s);
     }
 
-    int ans = 0;
+    int cnt = 0;
     while (m--) {
         string s;
         cin >> s;
-        ans += count(s);
+        cnt += find(s);
     }
-    cout << ans;
-    
-    return 0;
+
+    cout << cnt;
 }
