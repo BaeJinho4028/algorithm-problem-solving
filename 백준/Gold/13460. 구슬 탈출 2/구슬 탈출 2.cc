@@ -1,77 +1,130 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct marble {
-	int rx, ry;
-	int bx, by;
-	int cnt;
-};
+int mn = '????';
 
-int n, m;
-char board[15][15];
-bool vis[15][15][15][15];
+void d(int cur, vector<string> board, pair<int,int> r, pair<int,int> b);
 
-int dx[4] = { 1,0,-1,0 };
-int dy[4] = { 0,1,0,-1 };
+void f(vector<string>& board, pair<int, int>& ball, char c, int dir, bool& rf, bool& bf) {
+    int dx[4] = { -1, 1, 0, 0 };
+    int dy[4] = { 0, 0, -1, 1 };
 
-void move(int& nx, int& ny, int& dist, int& dir) {
-	while (board[nx + dx[dir]][ny + dy[dir]] != '#' && board[nx][ny] != 'O') {
-		nx += dx[dir];
-		ny += dy[dir];
-		dist++;
-	}
+    auto [x, y] = ball;
+    board[x][y] = '.';
+
+    while (true) {
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+
+        if (board[nx][ny] == 'O') {
+            if (c == 'R') {
+                rf = true;
+                return;
+            }
+            else {
+                bf = true;
+                return;
+            }
+        }
+
+        if (board[nx][ny] != '.') {
+            ball = {x, y};
+            board[x][y] = c;
+            return;
+        }
+
+        x = nx;
+        y = ny;
+    }
+}
+
+void bt(int cur, vector<string> board, pair<int, int> r, pair<int, int> b, int dir) {
+    if (cur > 10) {
+        return;
+    }
+
+    bool rf = false, bf = false;
+
+    // 상하좌우
+    if (dir == 0) {
+        if (r.first > b.first) {
+            f(board, b, 'B', dir, rf, bf);
+            f(board, r, 'R', dir, rf, bf);
+        }
+        else {
+            f(board, r, 'R', dir, rf, bf);
+            f(board, b, 'B', dir, rf, bf);
+        }
+    }
+    else if (dir == 1) {
+        if (r.first < b.first) {
+            f(board, b, 'B', dir, rf, bf);
+            f(board, r, 'R', dir, rf, bf);
+        }
+        else {
+            f(board, r, 'R', dir, rf, bf);
+            f(board, b, 'B', dir, rf, bf);
+        }
+    }
+    else if (dir == 2) {
+        if (r.second > b.second) {
+            f(board, b, 'B', dir, rf, bf);
+            f(board, r, 'R', dir, rf ,bf);
+        }
+        else {
+            f(board, r, 'R', dir, rf, bf);
+            f(board, b, 'B', dir, rf, bf);
+        }
+    }
+    else if (dir == 3) {
+        if (r.second < b.second) {
+            f(board, b, 'B', dir, rf, bf);
+            f(board, r, 'R', dir, rf, bf);
+        }
+        else {
+            f(board, r, 'R', dir, rf, bf);
+            f(board, b, 'B', dir, rf, bf);
+        }
+    }
+
+    if (bf) {
+        return;
+    }
+    if (rf) {
+        mn = min(mn, cur);
+        return;
+    }
+
+    d(cur + 1, board, r, b);
+}
+
+void d(int cur, vector<string> board, pair<int, int> r, pair<int, int> b) {
+    for (int dir = 0; dir < 4; ++dir) {
+        bt(cur, board, r, b, dir);
+    }
 }
 
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	
-	cin >> n >> m;
-	int RX, RY, BX, BY;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cin >> board[i][j];
-			if (board[i][j] == 'R') RX = i, RY = j;
-			if (board[i][j] == 'B') BX = i, BY = j;
-		}
-	}
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-	queue<marble> q;
-	q.push({ RX, RY, BX, BY, 0 });
-	vis[RX][RY][BX][BY] = true;
-	while (!q.empty()) {
-		int rx = q.front().rx;
-		int ry = q.front().ry;
-		int bx = q.front().bx;
-		int by = q.front().by;
-		int cnt = q.front().cnt;
-		q.pop();
+    int n, m;
+    cin >> n >> m;
+    
+    vector<string> board(n);
+    pair<int, int> r, b;
+    for (int i = 0; i < n; ++i) {
+        cin >> board[i];
+        for (int j = 0; j < m; ++j) {
+            if (board[i][j] == 'R') {
+                r = { i, j };
+            }
+            else if (board[i][j] == 'B') {
+                b = { i, j };
+            }
+        }
+    }
 
-		if (cnt >= 10) break;
-
-		for (int dir = 0; dir < 4; dir++) {
-			int nrx = rx, nry = ry, nbx = bx, nby = by;
-			int rc = 0, bc = 0, ncnt = cnt + 1;
-
-			move(nrx, nry, rc, dir);
-			move(nbx, nby, bc, dir);
-
-			if (board[nbx][nby] == 'O') continue;
-			if (board[nrx][nry] == 'O') {
-				cout << ncnt;
-				return 0;
-			}
-
-			if (nrx == nbx && nry == nby) {
-				if (rc > bc) nrx -= dx[dir], nry -= dy[dir];
-				else nbx -= dx[dir], nby -= dy[dir];
-			}
-
-			if (vis[nrx][nry][nbx][nby]) continue;
-			vis[nrx][nry][nbx][nby] = true;
-			q.push({ nrx, nry, nbx, nby, ncnt });
-		}
-	}
-
-	cout << -1;
+    d(1, board, r, b);
+    cout << (mn == '????' ? -1 : mn);
 }
