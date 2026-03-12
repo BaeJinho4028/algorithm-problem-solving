@@ -1,61 +1,89 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n;
-int board[22][22];
-int r[22][22];
+int mx = 0;
 
-void rotate() {
-	int tmp[22][22];
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			tmp[i][j] = board[i][j];
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			board[i][j] = tmp[n - 1 - j][i];
+void rotate(int cur, const int n, vector<vector<int>>& v);
+
+void slide(int cur, int n, const vector<vector<int>>& v) {
+    vector<vector<int>> line(n, vector<int>(n, 0));
+    for (int i = 0; i < n; ++i) {
+        queue<int> q;
+        for (int j = 0; j < n; ++j) {
+            if (v[i][j]) {
+                q.push(v[i][j]);
+            }
+        }
+
+        int idx = 0;
+        int x = 0;
+        while (!q.empty()) {
+            int tmp = q.front();
+            q.pop();
+        
+            if (x == 0) {
+                x = tmp;
+            }
+            else if (x == tmp) {
+                line[i][idx++] = x * 2;
+                x = 0;
+            }
+            else {
+                line[i][idx++] = x;
+                x = tmp;
+            }
+        }
+        if (x != 0 && idx < n) {
+            line[i][idx] = x;
+        }
+    }
+
+    rotate(cur + 1, n, line);
 }
 
-void up(int dir) {
-	while (dir--) rotate();
-	for (int i = 0; i < n; i++) {
-		int t[22] = {};
-		int idx = 0;
-		for (int j = 0; j < n; j++) {
-			if (board[i][j] == 0) continue;
-			if (t[idx] == 0) t[idx] = board[i][j];
-			else if (t[idx] == board[i][j])
-				t[idx++] *= 2;
-			else t[++idx] = board[i][j];
-		}
-		for (int j = 0; j < n; j++) board[i][j] = t[j];
-	}
+void chk(int n, const vector<vector<int>>& v) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            mx = max(mx, v[i][j]);
+        }
+    }
+}
+
+void rotate(int cur, const int n, vector<vector<int>>& v) {
+    if (cur >= 5) {
+        chk(n, v);
+        return;
+    }
+
+    slide(cur, n, v);
+
+    vector<vector<int>> tmp(n, vector<int>(n, 0));
+    for (int dir = 0; dir < 3; ++dir) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                tmp[i][j] = v[n - j - 1][i];
+            }
+        }
+        slide(cur, n, tmp);
+        v = tmp;
+    }
 }
 
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-	cin >> n;
+    int n;
+    cin >> n;
 
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			cin >> r[i][j];
+    vector<vector<int>> v(n, vector<int>(n));
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            cin >> v[i][j];
+        }
+    }
 
-	int mx = 0;
+    rotate(0, n, v);
 
-	for (int tmp = 0; tmp < (1 << (10)); tmp++) {
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n; j++)
-				board[i][j] = r[i][j];
-		int brute = tmp;
-		for (int i = 0; i < 5; i++) {
-			int dir = brute % 4;
-			brute /= 4;
-			up(dir);
-		}
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n; j++)
-				mx = max(mx, board[i][j]);
-	}
-	cout << mx;
+    cout << mx;
 }
