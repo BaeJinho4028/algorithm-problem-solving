@@ -2,56 +2,58 @@
 using namespace std;
 
 int n, m, h;
-bool vis[35][15]; //높이 세로선
+bool vis[35][15];
 
-void dfs(int x, int cur, int cnt) {
-	if (cur == cnt) {
-		bool flag = true;
+void dfs(int ch, int cur, int ans) {
+    if (cur == ans) {
+        bool flag = true;
 
-		for (int i = 1; i <= n; i++) {
-			int idx = i;
-			for (int j = 1; j <= h; j++) {
-				if (vis[j][idx]) idx++;
-				else if (vis[j][idx - 1]) idx--;
-			}
-			if (idx != i) {
-				flag = false;
-				break;
-			}
-		}
+        for (int st = 1; st <= n; ++st) {
+            int cx = st;
 
-		if (flag) {
-			cout << cnt;
-			exit(0);
-		}
-		return;
-	}
+            for (int j = 1; j <= h; ++j) {
+                if (vis[j][cx]) cx++;
+                else if (vis[j][cx - 1]) cx--;
+            }
 
-	for (int i = x; i <= h; i++) {
-		for (int j = 1; j < n; j++) {
-			if (vis[i][j - 1] || vis[i][j] || vis[i][j + 1]) continue;
-			vis[i][j] = true;
-			dfs(i, cur + 1, cnt);
-			vis[i][j] = false;
-		}
-	}
+            if (cx != st) {
+                flag = false;
+                break;
+            }
+        }
+
+        if (flag) {
+            cout << ans;
+            exit(0);
+        }
+        return;
+    }
+
+    for (int i = ch; i <= h; ++i) {
+        for (int j = 1; j < n; ++j) {
+            if (vis[i][j - 1] || vis[i][j] || vis[i][j + 1]) continue;
+            vis[i][j] = true;
+            dfs(i, cur + 1, ans);
+            vis[i][j] = false;
+        }
+    }
 }
 
-int main(void) {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-	cin >> n >> m >> h;
+    cin >> n >> m >> h;
 
-	while (m--) {
-		int a, b;
-		cin >> a >> b;
-		vis[a][b] = true;
-	}
+    while (m--) {
+        int a, b;
+        cin >> a >> b;
+        vis[a][b] = true;
+    }
 
-	for (int i = 0; i <= 3; i++) { //정답이 3보다 크면 -1 (시작도 포함)
-		dfs(1, 0, i);
-	}
+    for (int ans = 0; ans <= 3; ++ans) {
+        dfs(1, 0, ans);
+    }
 
-	cout << -1;
+    cout << -1;
 }
