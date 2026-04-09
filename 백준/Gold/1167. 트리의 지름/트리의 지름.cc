@@ -1,54 +1,49 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-#define X first
-#define Y second
 
-vector<pair<int, int>> e[100005];
-bool vis[100005];
-ll mx, node;
+int n;
+vector<bool> vis;
+vector<vector<pair<int, int>>> adj;
+int node, mx;
 
-void dfs(int x, ll sum) {
-	if (vis[x]) return;
-	vis[x] = true;
+void dfs(int x, int sum) {
+    if (vis[x]) return;
+    vis[x] = true;
 
-	if (sum > mx) {
-		mx = sum;
-		node = x;
-	}
+    if (sum > mx) {
+        mx = sum;
+        node = x;
+    }
 
-	for (auto nxt : e[x]) {
-		dfs(nxt.X, sum + nxt.Y);
-	}
+    for (auto [nx, nw] : adj[x]) {
+        dfs(nx, sum + nw);
+    }
 }
 
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-	int v;
-	cin >> v;
+    cin >> n;
 
-	for (int i = 0; i < v; i++) {
-		int a, b, c;
-		cin >> a;
+    adj.assign(n + 1, vector<pair<int, int>>());
+    for (int i = 1; i <= n; ++i) {
+        int cur, nxt, w;
 
-		cin >> b;
-		while (b != -1) {
-			cin >> c;
+        cin >> cur;
 
-			e[a].push_back({ b, c });
+        while (cin >> nxt) {
+            if (nxt == -1) break;
+            
+            cin >> w;
+            adj[cur].push_back({nxt, w});
+        }
+    }
 
-			cin >> b;
-		}
-	}
+    vis.assign(n + 1, false);
+    dfs(1, 0);
+    vis.assign(n + 1, false);
+    dfs(node, 0);
 
-	dfs(1, 0);
-
-	memset(vis, false, sizeof(vis));
-	mx = 0;
-
-	dfs(node, 0);
-
-	cout << mx;
+    cout << mx;
 }
