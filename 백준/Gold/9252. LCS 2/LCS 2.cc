@@ -1,41 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-string a, b;
-int d[1005][1005];
-
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-	cin >> a >> b;
-	for (int i = 1; i <= a.size(); i++) {
-		for (int j = 1; j <= b.size(); j++) {
-			if (a[i - 1] == b[j - 1])
-				d[i][j] = d[i - 1][j - 1] + 1;
-			else
-				d[i][j] = max(d[i - 1][j], d[i][j - 1]);
-		}
-	}
+    string a, b;
+    cin >> a >> b;
 
-	cout << d[a.size()][b.size()] << '\n';
+    int n = a.size();
+    int m = b.size();
 
-    //yun님코드참고
-    
-	int len = d[a.size()][b.size()];
-	int i = a.size(), j = b.size();
-	char ans[1005]{};
+    vector<vector<int>> d(n + 1, vector<int>(m + 1));
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= m; ++j) {
+            if (a[i - 1] == b[j - 1]) {
+                d[i][j] = d[i - 1][j - 1] + 1;
+            }
+            else {
+                d[i][j] = max(d[i - 1][j], d[i][j - 1]);
+            }
+        }
+    }
 
-	for (int k = 0; k < len; ++k) {
-		while (1) {
-			if (d[i][j] == d[i][j - 1]) --j;
-			else if (d[i][j] == d[i - 1][j]) --i;
-			else break;
-		}
+    cout << d[n][m] << '\n';
 
-		ans[len - k - 1] = a[i-1];
-		--i, --j;
-	}
+    string ans = "";
+    int i = n, j = m;
 
-	cout << ans;
+    while (i > 0 && j > 0) {
+        if (a[i - 1] == b[j - 1]) {
+            ans += a[i - 1];
+            i--;
+            j--;
+        }
+        else if (d[i - 1][j] >= d[i][j - 1]) {
+            i--;
+        }
+        else {
+            j--;
+        }
+    }
+
+    reverse(ans.begin(), ans.end());
+
+    if (!ans.empty()) cout << ans;
 }
