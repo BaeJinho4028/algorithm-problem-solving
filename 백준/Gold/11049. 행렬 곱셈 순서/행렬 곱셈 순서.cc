@@ -1,26 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int r[505], c[505], d[505][505];
+int n;
+vector<pair<int, int>> v;
+vector<vector<int>> d;
+
+int f(int st, int en) {
+    if (st == en) return 0;
+
+    int& ret = d[st][en];
+    if (~ret) return ret;
+
+    ret = '????';
+
+    for (int mid = st; mid < en; ++mid) {
+        ret = min(
+            ret, 
+            f(st, mid) + f(mid + 1, en) + (v[st].first * v[mid].second * v[en].second)
+        );
+    }
+    return ret;
+}
 
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-	int n;
-	cin >> n;
+    cin >> n;
+    v.resize(n);
 
-	for (int i = 1; i <= n; i++)
-		cin >> r[i] >> c[i];
+    for (int i = 0; i < n; ++i) {
+        cin >> v[i].first >> v[i].second;
+    }
 
-	for (int i = 1; i <= n; i++) { // 범위
-		for (int j = 1; i + j <= n; j++) {
-			d[j][i + j] = '????';
-			for (int k = j; k <= i + j; k++) {
-				d[j][i + j] = min(d[j][i + j], d[j][k] + d[k + 1][i + j] + r[j] * c[k] * c[i + j]);
-			}
-		}
-	}
-
-	cout << d[1][n];
+    d.assign(n, vector<int>(n, -1));
+    cout << f(0, n - 1);
 }
+
