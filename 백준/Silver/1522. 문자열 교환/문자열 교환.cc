@@ -7,27 +7,16 @@ int main() {
 
     string s;
     cin >> s;
-    int n = s.size();
 
+    int n = s.size();
     int k = count(s.begin(), s.end(), 'a');
-    if (k == 0 || k == n) {
-        cout << 0 << '\n';
-        return 0;
-    }
+    int b = count(s.begin(), s.begin() + k, 'b');
 
     s = s + s;
-
-    int b = 0;
-    for (int i = 0; i < k; ++i) {
-        if (s[i] == 'b') {
-            b++;
-        }
-    }
-
     int ans = b;
-    for (int i = 1; i < n; ++i) {
-        if (s[i - 1] == 'b') b--;
-        if (s[i + k - 1] == 'b') b++;
+    for (int i = k; i < n * 2; ++i) {
+        if (s[i] == 'b') b++;
+        if (s[i - k] == 'b') b--;
         ans = min(ans, b);
     }
 
