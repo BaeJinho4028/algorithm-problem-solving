@@ -1,38 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, k;
-int a[50005];
-int d[4][50005];
+int n, m;
+vector<int> a(50'005);
+vector<vector<int>> d(4, vector<int>(50'005, -1));
 
-int f(int cur, int t) {
-	if (cur == 3 || t > n)
-		return 0;
+int f(int cnt, int cur) {
+    if (cnt == 3 || n < cur) return 0;
 
-	int& ret = d[cur][t];
-	if (~ret) return ret;
-	ret = 0;
+    int& ret = d[cnt][cur];
+    if (~ret) return ret;
 
-	// 넘어가거나, 연속된 k칸을 고르거나
-	ret = max(f(cur, t + 1), f(cur + 1, t + k) + (a[t] - a[t - k]));
+    ret = 0;
+    ret = max(f(cnt, cur + 1), f(cnt + 1, cur + m) + (a[cur] - a[cur - m]));
 
-	return ret;
+    return ret;
 }
 
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-	cin >> n;
+    cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i];
+        a[i] += a[i - 1];
+    }
+    cin >> m;
 
-	for (int i = 1; i <= n; i++) {
-		cin >> a[i];
-		a[i] += a[i - 1];
-	}
-	cin >> k;
-
-	memset(d, -1, sizeof(d));
-	cout << f(0, k);
-	
-	return 0;
+    cout << f(0, m);
 }
+
